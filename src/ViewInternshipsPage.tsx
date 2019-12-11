@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
 
-import { Table, Modal } from 'antd';
+import { Table, Modal, Button } from 'antd';
 
 import InternshipModalContent from './InternshipModalContent';
 import { TableEventListeners } from 'antd/lib/table/interface';
@@ -11,6 +11,8 @@ import { TableEventListeners } from 'antd/lib/table/interface';
 interface Internship {
   _id: string;
   company: string;
+  year: number;
+  title: string;
   compensation: Compensation;
 }
 
@@ -24,11 +26,23 @@ interface InternshipData {
   internships: Internship[];
 }
 
+interface Column {
+  key: string;
+  company: string;
+  year: number;
+  title: string;
+  base: number;
+  bonus: number;
+  benefits: string;
+}
+
 const INTERNSHIPS_TABLE_QUERY = gql`
   query getInternshipsForTable {
     internships {
       _id
       company
+      year
+      title
       compensation {
         base
         bonus
@@ -38,19 +52,10 @@ const INTERNSHIPS_TABLE_QUERY = gql`
   }
 `;
 
-const INTERNSHIP_MODAL_QUERY = gql`
-  query getInternshipForModal($id: String!) {
-    internship(id: $id) {
-      _id
-      title
-      company
-    }
-  }
-`;
-
 const ViewInternshipsPage: React.FC = () => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [selectedCompany, setSelectedCompany] = useState<string | null>(null);
 
   const { loading, error, data } = useQuery<InternshipData>(INTERNSHIPS_TABLE_QUERY);
 
@@ -67,6 +72,8 @@ const ViewInternshipsPage: React.FC = () => {
       return {
         key: internship._id,
         company: internship.company,
+        year: internship.year,
+        title: internship.title,
         base: internship.compensation.base,
         bonus: internship.compensation.bonus,
         benefits: internship.compensation.benefits,
@@ -78,16 +85,41 @@ const ViewInternshipsPage: React.FC = () => {
       title: 'Company',
       dataIndex: 'company',
       key: 'company',
+      sorter: (a: Column, b: Column): number => {
+        return a.company.localeCompare(b.company);
+      },
+    },
+    {
+      title: 'Year',
+      dataIndex: 'year',
+      key: 'year',
+      sorter: (a: Column, b: Column): number => {
+        return b.year - a.year;
+      },
+    },
+    {
+      title: 'Title',
+      dataIndex: 'title',
+      key: 'title',
+      sorter: (a: Column, b: Column): number => {
+        return a.title.localeCompare(b.title);
+      },
     },
     {
       title: 'Monthly Salary',
       dataIndex: 'base',
       key: 'base',
+      sorter: (a: Column, b: Column): number => {
+        return b.base - a.base;
+      },
     },
     {
       title: 'Housing Stipend',
       dataIndex: 'bonus',
       key: 'bonus',
+      sorter: (a: Column, b: Column): number => {
+        return b.bonus - a.bonus;
+      },
     },
     {
       title: 'Other Benefits',
@@ -106,12 +138,13 @@ const ViewInternshipsPage: React.FC = () => {
             onClick: (): void => {
               setModalVisible(true);
               setSelectedId(record.key);
+              setSelectedCompany(record.company + ' - ' + record.title);
             },
           };
         }}
       />
       <Modal
-        title="Basic Modal"
+        title={selectedCompany}
         visible={modalVisible}
         onOk={(): void => {
           setModalVisible(false);
@@ -119,6 +152,18 @@ const ViewInternshipsPage: React.FC = () => {
         onCancel={(): void => {
           setModalVisible(false);
         }}
+        footer={[
+          <Button
+            key="back"
+            type="primary"
+            loading={loading}
+            onClick={(): void => {
+              setModalVisible(false);
+            }}
+          >
+            Back
+          </Button>,
+        ]}
       >
         <InternshipModalContent id={selectedId}></InternshipModalContent>
       </Modal>

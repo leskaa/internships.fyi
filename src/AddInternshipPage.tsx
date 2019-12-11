@@ -1,7 +1,13 @@
 import React from 'react';
+import { SubmitForm } from './SubmitForm';
 
 const AddInternshipPage: React.FC = () => {
-  return <h2>Add Intership</h2>;
+  return (
+    <div>
+      <br />
+      <SubmitForm></SubmitForm>
+    </div>
+  );
 };
 
 export default AddInternshipPage;
