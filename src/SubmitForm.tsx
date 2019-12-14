@@ -5,9 +5,9 @@ import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
 const { Option } = Select;
 
-const CREATE_INTERNSHIP = gql`
-  mutation CreateInternship($internship: InternshipInput!) {
-    createInternship(options: $internship) {
+const CREATE_UNVERIFIED_INTERNSHIP = gql`
+  mutation CreateUnverifiedInternship($internship: InternshipInput!) {
+    createUnverifiedInternship(options: $internship) {
       _id
     }
   }
@@ -30,7 +30,7 @@ function SubmitFormImpl(props: LoginFormProps): JSX.Element {
   const { form } = props;
   const { getFieldDecorator } = form;
 
-  const [createInternship] = useMutation(CREATE_INTERNSHIP);
+  const [createInternship] = useMutation(CREATE_UNVERIFIED_INTERNSHIP);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
