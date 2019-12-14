@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Input, Select, Button } from 'antd';
+import { Form, Input, Select, Button, message } from 'antd';
 import { FormComponentProps } from 'antd/lib/form';
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
@@ -36,7 +36,6 @@ function SubmitFormImpl(props: LoginFormProps): JSX.Element {
     e.preventDefault();
     props.form.validateFields((err, values) => {
       if (!err) {
-        console.log('Received values of form: ', values);
         createInternship({
           variables: {
             internship: {
@@ -57,6 +56,9 @@ function SubmitFormImpl(props: LoginFormProps): JSX.Element {
             },
           },
         });
+        message.success(
+          'Unverified internship has been sucessfully submitted! Until admin approval it will not show up on the main page.',
+        );
       }
     });
   };
