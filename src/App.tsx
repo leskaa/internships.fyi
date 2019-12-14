@@ -11,7 +11,10 @@ import Title from 'antd/lib/typography/Title';
 const { Footer } = Layout;
 
 const client = new ApolloClient({
-  uri: process.env.NODE_ENV === 'production' ? 'https://techintern.fyi/graphql' : 'http://localhost:4000/graphql',
+  uri:
+    process.env.NODE_ENV === 'production'
+      ? 'https://internships-graphql-api.herokuapp.com/graphql'
+      : 'http://localhost:4000/graphql',
 });
 
 const App: React.FC = () => {
