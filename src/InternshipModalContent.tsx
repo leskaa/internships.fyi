@@ -12,6 +12,7 @@ interface Props {
 interface Internship {
   title: string;
   company: string;
+  location: string;
   compensation: Compensation;
   student: Student;
   year: number;
@@ -43,6 +44,7 @@ const INTERNSHIP_MODAL_QUERY = gql`
     internship(id: $id) {
       title
       company
+      location
       compensation {
         base
         bonus
@@ -77,6 +79,9 @@ const InternshipModalContent: React.FC<Props> = ({ id }) => {
         <Descriptions.Item label="Title">{data && data.internship.title}</Descriptions.Item>
         <Descriptions.Item label="Company" span={2}>
           {data && data.internship.company}
+        </Descriptions.Item>
+        <Descriptions.Item label="Location" span={4}>
+          {data && data.internship.location}
         </Descriptions.Item>
         <Descriptions.Item label="Year">{data && data.internship.year}</Descriptions.Item>
         <Descriptions.Item label="Length in weeks">{data && data.internship.durationInWeeks}</Descriptions.Item>
