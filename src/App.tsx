@@ -65,7 +65,7 @@ const App: React.FC = () => {
             </Route>
           </Switch>
           <Footer style={{ position: 'absolute', bottom: 0, width: '100%' }}>
-            <div style={{ textAlign: 'center' }}>© 2019-2020 TechIntern.fyi</div>
+            <div style={{ textAlign: 'center' }}>© {new Date().getFullYear()} TechIntern.fyi</div>
           </Footer>
         </Layout>
       </ApolloProvider>
