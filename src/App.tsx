@@ -3,9 +3,9 @@ import ApolloClient from 'apollo-boost';
 import { ApolloProvider } from '@apollo/react-hooks';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import './App.css';
-import ViewInternshipsPage from './ViewInternshipsPage';
-import AddInternshipPage from './AddInternshipPage';
-import ApprovalToolPage from './ApprovalToolPage';
+import ViewInternshipsPage from './pages/ViewInternship';
+import AddInternshipPage from './pages/AddInternship';
+import ApproveInternship from './pages/ApproveInternship';
 import { Menu, Typography, Layout } from 'antd';
 import Title from 'antd/lib/typography/Title';
 const { Footer } = Layout;
@@ -58,7 +58,7 @@ const App: React.FC = () => {
               <AddInternshipPage />
             </Route>
             <Route path="/approvaltool">
-              <ApprovalToolPage />
+              <ApproveInternship />
             </Route>
             <Route path="/">
               <ViewInternshipsPage />

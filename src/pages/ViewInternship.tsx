@@ -3,9 +3,9 @@ import React, { useState } from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
 
-import { Table, Modal, Button } from 'antd';
+import { Table, Modal, Button, Alert } from 'antd';
 
-import InternshipModalContent from './InternshipModalContent';
+import InternshipModal from '../components/InternshipModal';
 import { TableEventListeners } from 'antd/lib/table/interface';
 
 interface Internship {
@@ -59,11 +59,12 @@ const ViewInternshipsPage: React.FC = () => {
 
   const { loading, error, data } = useQuery<InternshipData>(INTERNSHIPS_TABLE_QUERY);
 
-  if (loading) {
-    return <p>Loading...</p>;
-  }
   if (error) {
-    return <p>Error</p>;
+    return (
+      <div className="page-content-error">
+        <Alert message="Internship API Query failed" type="error" showIcon />
+      </div>
+    );
   }
 
   const dataSource =
@@ -129,10 +130,12 @@ const ViewInternshipsPage: React.FC = () => {
   ];
 
   return (
-    <div>
+    <div className="page-content">
       <Table
         dataSource={dataSource}
         columns={columns}
+        loading={loading}
+        bordered={true}
         onRow={(record): TableEventListeners => {
           return {
             onClick: (): void => {
@@ -165,7 +168,7 @@ const ViewInternshipsPage: React.FC = () => {
           </Button>,
         ]}
       >
-        <InternshipModalContent id={selectedId}></InternshipModalContent>
+        <InternshipModal id={selectedId}></InternshipModal>
       </Modal>
     </div>
   );

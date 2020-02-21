@@ -30,13 +30,13 @@ function SubmitFormImpl(props: LoginFormProps): JSX.Element {
   const { form } = props;
   const { getFieldDecorator } = form;
 
-  const [createInternship] = useMutation(CREATE_UNVERIFIED_INTERNSHIP);
+  const [createUnverifiedInternship] = useMutation(CREATE_UNVERIFIED_INTERNSHIP);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     props.form.validateFields((err, values) => {
       if (!err) {
-        createInternship({
+        createUnverifiedInternship({
           variables: {
             internship: {
               title: values.title,
@@ -57,7 +57,7 @@ function SubmitFormImpl(props: LoginFormProps): JSX.Element {
           },
         });
         message.success(
-          'Unverified internship has been sucessfully submitted! Until admin approval it will not show up on the main page.',
+          'Unverified internship has been successfully submitted! It will show up on the main page after admin approval.',
         );
       }
     });

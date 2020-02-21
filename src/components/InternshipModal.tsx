@@ -61,7 +61,7 @@ const INTERNSHIP_MODAL_QUERY = gql`
   }
 `;
 
-const InternshipModalContent: React.FC<Props> = ({ id }) => {
+const InternshipModal: React.FC<Props> = ({ id }) => {
   const { loading, error, data } = useQuery<InternshipData, InternshipVars>(INTERNSHIP_MODAL_QUERY, {
     variables: { id: id ? id : '' },
   });
@@ -115,4 +115,4 @@ const InternshipModalContent: React.FC<Props> = ({ id }) => {
   );
 };
 
-export default InternshipModalContent;
+export default InternshipModal;

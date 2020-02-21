@@ -16,6 +16,32 @@
   }
 }
 
+.page-content {
+  margin-left: 2rem;
+  margin-right: 2rem;
+  margin-top: 1rem;
+}
+
+.page-content-error {
+  margin-top: 1rem;
+  margin-left: 35%;
+  margin-right: 35%;
+}
+
+@media only screen and (max-width: 600px) {
+  .page-content-error {
+    margin-top: 1rem;
+    margin-left: 10%;
+    margin-right: 10%;
+  }
+
+  .page-content {
+    margin-left: 1rem;
+    margin-right: 1rem;
+    margin-top: 1rem;
+  }
+}
+
 .App-header {
   background-color: #ffffff;
   min-height: 100vh;
