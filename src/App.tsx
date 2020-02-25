@@ -1,11 +1,11 @@
 import React from 'react';
 import ApolloClient from 'apollo-boost';
 import { ApolloProvider } from '@apollo/react-hooks';
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import { HashRouter, Switch, Route, Link } from 'react-router-dom';
 import './App.css';
-import ViewInternshipsPage from './pages/ViewInternship';
-import AddInternshipPage from './pages/AddInternship';
-import ApproveInternship from './pages/ApproveInternship';
+import ViewInternship from './pages/ViewInternship';
+import AddInternship from './pages/AddInternship';
+import AdminTool from './pages/AdminTool';
 import { Menu, Typography, Layout } from 'antd';
 import Title from 'antd/lib/typography/Title';
 const { Footer } = Layout;
@@ -19,7 +19,7 @@ const client = new ApolloClient({
 
 const App: React.FC = () => {
   return (
-    <Router>
+    <HashRouter>
       <ApolloProvider client={client}>
         <Layout
           style={{
@@ -55,13 +55,13 @@ const App: React.FC = () => {
           </Menu>
           <Switch>
             <Route path="/addinternship">
-              <AddInternshipPage />
+              <AddInternship />
             </Route>
-            <Route path="/approvaltool">
-              <ApproveInternship />
+            <Route path="/admin">
+              <AdminTool />
             </Route>
             <Route path="/">
-              <ViewInternshipsPage />
+              <ViewInternship />
             </Route>
           </Switch>
           <Footer style={{ position: 'absolute', bottom: 0, width: '100%' }}>
@@ -69,7 +69,7 @@ const App: React.FC = () => {
           </Footer>
         </Layout>
       </ApolloProvider>
-    </Router>
+    </HashRouter>
   );
 };
 
