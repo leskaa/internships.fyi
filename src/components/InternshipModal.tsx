@@ -3,7 +3,7 @@ import React from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
 
-import { Descriptions } from 'antd';
+import { Descriptions, Alert, Card } from 'antd';
 
 interface Props {
   id: string | null;
@@ -67,10 +67,27 @@ const InternshipModal: React.FC<Props> = ({ id }) => {
   });
 
   if (loading) {
-    return <p>Loading...</p>;
+    return (
+      <div>
+        <Descriptions title="General Info" size="small"></Descriptions>
+        <Card loading={loading}></Card>
+        <br />
+        <br />
+        <Descriptions title="Compensation" size="small"></Descriptions>
+        <Card loading={loading}></Card>
+        <br />
+        <br />
+        <Descriptions title="Student Info" size="small"></Descriptions>
+        <Card loading={loading}></Card>
+      </div>
+    );
   }
   if (error) {
-    return <p>Error</p>;
+    return (
+      <div className="page-content-error">
+        <Alert message="Internship API Query failed" type="error" showIcon />
+      </div>
+    );
   }
 
   return (
@@ -81,7 +98,7 @@ const InternshipModal: React.FC<Props> = ({ id }) => {
           {data && data.internship.company}
         </Descriptions.Item>
         <Descriptions.Item label="Location" span={4}>
-          {data && data.internship.location}
+          {data && data.internship.location ? data.internship.location : 'Unknown'}
         </Descriptions.Item>
         <Descriptions.Item label="Year">{data && data.internship.year}</Descriptions.Item>
         <Descriptions.Item label="Length in weeks">{data && data.internship.durationInWeeks}</Descriptions.Item>
