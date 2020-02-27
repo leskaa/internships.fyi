@@ -22,6 +22,10 @@
   margin-top: 1rem;
 }
 
+.admin-tool-page {
+  text-align: center;
+}
+
 .page-content-error {
   margin-top: 1rem;
   margin-left: 35%;
