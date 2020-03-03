@@ -6,7 +6,6 @@ import { gql } from 'apollo-boost';
 import { Table, Modal, Button, Alert } from 'antd';
 
 import InternshipModal from '../components/InternshipModal';
-import { TableEventListeners } from 'antd/lib/table/interface';
 
 interface Internship {
   _id: string;
@@ -136,7 +135,7 @@ const ViewInternshipsPage: React.FC = () => {
         columns={columns}
         loading={loading}
         bordered={true}
-        onRow={(record): TableEventListeners => {
+        onRow={(record): React.HTMLAttributes<HTMLElement> => {
           return {
             onClick: (): void => {
               setModalVisible(true);

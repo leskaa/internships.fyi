@@ -1,51 +1,88 @@
-import React, { useEffect } from 'react';
-import { Form, Icon, Input, Button } from 'antd';
+import React from 'react';
+import { Form, Input, Checkbox, Button, message } from 'antd';
+import { gql } from 'apollo-boost';
+import { useMutation } from '@apollo/react-hooks';
 
-const hasErrors = (fieldsError: any): boolean => {
-  return Object.keys(fieldsError).some(field => fieldsError[field]);
+interface ValidateErrorEntity {
+  values: Record<string, string>;
+  errorFields: {
+    name: (string | number)[];
+    errors: string[];
+  }[];
+  outOfDate: boolean;
+}
+
+const layout = {
+  labelCol: { span: 8 },
+  wrapperCol: { span: 8 },
+};
+const tailLayout = {
+  wrapperCol: { offset: 8, span: 8 },
 };
 
-const LoginForm = (props: any): JSX.Element => {
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
-    e.preventDefault();
-    props.form.validateFields((err: any, values: any) => {
-      if (!err) {
-        console.log('Received values of form: ', values);
+const LOGIN_MUTATION = gql`
+  mutation Login($authInput: AuthInput!) {
+    login(input: $authInput) {
+      user {
+        email
       }
-    });
+    }
+  }
+`;
+
+const LoginForm = (): JSX.Element => {
+  const [login, { loading: mutationLoading }] = useMutation(LOGIN_MUTATION, {
+    errorPolicy: 'all',
+  });
+
+  const onFinish = async (values: Record<string, string>): Promise<void> => {
+    try {
+      const result = await login({
+        variables: {
+          authInput: {
+            email: values.email,
+            password: values.password,
+          },
+        },
+      });
+      if (!result.data.login.user) {
+        message.warning('Login Failed!');
+      } else {
+        message.success('Logged In!');
+      }
+    } catch (error) {
+      message.error('Internship API Login Mutation failed');
+    }
   };
-  const { getFieldDecorator, getFieldsError, getFieldError, isFieldTouched } = props.form;
-  const usernameError = isFieldTouched('username') && getFieldError('username');
-  const passwordError = isFieldTouched('password') && getFieldError('password');
-  useEffect(() => {
-    props.form.validateFields();
-  }, []);
+
+  const onFinishFailed = (errorInfo: ValidateErrorEntity): void => {
+    console.log(errorInfo);
+  };
+
   return (
-    <div>
-      <Form layout="inline" onSubmit={handleSubmit}>
-        <Form.Item validateStatus={usernameError ? 'error' : ''} help={usernameError || ''}>
-          {getFieldDecorator('username', {
-            rules: [{ required: true, message: 'Please input your Username!' }],
-          })(<Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,0.25)' }} />} placeholder="Username" />)}
-        </Form.Item>
-        <Form.Item validateStatus={passwordError ? 'error' : ''} help={passwordError || ''}>
-          {getFieldDecorator('password', {
-            rules: [{ required: true, message: 'Please input your Password!' }],
-          })(
-            <Input
-              prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,0.25)' }} />}
-              type="password"
-              placeholder="Password"
-            />,
-          )}
-        </Form.Item>
-        <Form.Item>
-          <Button type="primary" htmlType="submit" disabled={hasErrors(getFieldsError())}>
-            Log In
-          </Button>
-        </Form.Item>
-      </Form>
-    </div>
+    <Form
+      {...layout}
+      name="basic"
+      initialValues={{ remember: true }}
+      onFinish={onFinish}
+      onFinishFailed={onFinishFailed}
+    >
+      <Form.Item label="Email" name="email" rules={[{ required: true, message: 'Please input your email!' }]}>
+        <Input />
+      </Form.Item>
+      <Form.Item label="Password" name="password" rules={[{ required: true, message: 'Please input your password!' }]}>
+        <Input.Password />
+      </Form.Item>
+      <Form.Item {...tailLayout} name="remember" valuePropName="checked">
+        <Checkbox>Remember me</Checkbox>
+      </Form.Item>
+
+      <Form.Item {...tailLayout}>
+        <Button type="primary" htmlType="submit" loading={mutationLoading}>
+          Submit
+        </Button>
+      </Form.Item>
+    </Form>
   );
 };
 
